@@ -53,17 +53,18 @@ public class DataHelper {
     public static VerificationCode getInvalidVerificationCode() {
         return new VerificationCode("00");
     }
-}
- 10  
-src/test/java/ru/netology/page/DashboardPage.java
-@@ -0,0 +1,10 @@
-package ru.netology.page;
 
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-
-public class DashboardPage {
-    public DashboardPage() {
-        $("[data-test-id='dashboard']").shouldBe(visible);
+    @SneakyThrows
+    public static void clearAllData() {
+        var clearCodes = "DELETE FROM auth_codes;";
+        var clearCards = "DELETE FROM cards;";
+        var clearUsers = "DELETE FROM users;";
+        var runner = new QueryRunner();
+        try (var conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/app", "app", "pass")) {
+            runner.execute(conn, clearCodes);
+            runner.execute(conn, clearCards);
+            runner.execute(conn, clearUsers);
+        }
     }
 }
